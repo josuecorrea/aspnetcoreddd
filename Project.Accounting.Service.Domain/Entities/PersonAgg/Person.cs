@@ -11,6 +11,7 @@ namespace Project.Accounting.Service.Domain.Entities.PersonAgg
             BirthDate = birthDate;
             Type = type;
         }
+
         public Person()
         {
             

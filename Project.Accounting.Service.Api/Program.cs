@@ -12,6 +12,8 @@ builder.Services.AddValidatorConfig();
 builder.Services.AddMediatrConfig();
 builder.Services.AddRepositoriesDependecyInjection();
 builder.Services.AddMediatrDependecyInjection();
+builder.Services.AddServicesDependecyInjection();
+builder.Services.AddBrokerConfiguration();
 
 var app = builder.Build();
 

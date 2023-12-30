@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Project.Accounting.Service.Application.UseCases.Account.Create.Notifications
+namespace PersonCreatedNotificationEvent
 {
     public class PersonCreatedNotification : INotification
     {
