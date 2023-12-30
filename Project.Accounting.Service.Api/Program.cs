@@ -10,7 +10,7 @@ builder.Services.AddMediatrConfig();
 builder.Services.AddRepositoriesDependecyInjection();
 builder.Services.AddMediatrDependecyInjection();
 builder.Services.AddServicesDependecyInjection();
-builder.Services.AddBrokerConfiguration();
+builder.Services.AddBrokerConfiguration(builder.Configuration);
 
 var app = builder.Build();
 

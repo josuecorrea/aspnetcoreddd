@@ -10,23 +10,27 @@ using Project.Accounting.Service.Domain.Contracts.Services;
 using Project.Accounting.Service.Domain.Entities.PersonAgg;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Mapping;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Project.Accounting.Service.Application.UseCases.Account.Create
 {
-    public class CreatePersonHandler : IRequestHandler<CreatePersonRequest, BaseResult<CreatePersonResponse>>
+    public class CreatePersonHandler : MediatrHandlerBase, IRequestHandler<CreatePersonRequest, BaseResult<CreatePersonResponse>>
     {
         private readonly IPersonRepository _personRepository;
         private readonly IMediator _mediator;
         private readonly ILogger<CreatePersonHandler> _logger;
         private readonly ICacheService _cacheService;
+        private readonly IConfiguration _configuration;
 
-        public CreatePersonHandler(IPersonRepository personRepository, IMediator mediator, ILogger<CreatePersonHandler> logger,
-            ICacheService cacheService)
+        public CreatePersonHandler(IPersonRepository personRepository, IMediator mediator, 
+            ILogger<CreatePersonHandler> logger,
+            ICacheService cacheService, IConfiguration configuration)
         {
             _personRepository = personRepository;
             _mediator = mediator;
             _logger = logger;
             _cacheService = cacheService;
+            _configuration = configuration;
         }
 
         public async Task<BaseResult<CreatePersonResponse>> Handle(CreatePersonRequest request, CancellationToken cancellationToken)
@@ -37,13 +41,15 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
 
                 var personCreated = await CreatePerson(person);
 
-                return new BaseResult<CreatePersonResponse>(person.MapToCreatePersonResponse(personCreated));
+                return Result(person.MapToCreatePersonResponse(personCreated));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error ocurred while create new person!");
+                var error = "An error ocurred while create new person!";
+                AddError(error);
+                _logger.LogError(ex, error);
 
-                return new BaseResult<CreatePersonResponse>(new Person().MapToCreatePersonResponse(false));
+                return Result(new Person().MapToCreatePersonResponse(false));
             }
         }
 

@@ -15,7 +15,7 @@ namespace Project.Accounting.Service.Infra.Services
         {
             _configuration = configuration;
 
-            var cnn = ConnectionMultiplexer.Connect("localhost:6379");
+            var cnn = ConnectionMultiplexer.Connect(_configuration["ConnectionStrings:CacheConnection"]);
             _db = cnn.GetDatabase();
         }
 

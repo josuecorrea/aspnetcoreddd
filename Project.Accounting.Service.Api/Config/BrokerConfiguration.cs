@@ -4,7 +4,7 @@ namespace Project.Accounting.Service.Api.Config
 {
     public static class BrokerConfiguration
     {
-        public static IServiceCollection AddBrokerConfiguration(this IServiceCollection services)
+        public static IServiceCollection AddBrokerConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
              services.AddMassTransit(x =>
              {
@@ -12,7 +12,7 @@ namespace Project.Accounting.Service.Api.Config
 
                  x.UsingRabbitMq((context, cfg) =>
                  {
-                     cfg.Host(new Uri($"rabbitmq://localhost:5672"), h =>
+                     cfg.Host(new Uri(configuration["ConnectionStrings:BrokerConnection"]), h =>
                      {
                          h.Username("guest");
                          h.Password("guest");
