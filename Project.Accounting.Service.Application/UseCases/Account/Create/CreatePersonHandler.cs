@@ -39,10 +39,7 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
 
             var personCreated = await CreatePerson(person);
 
-            if (personCreated)
-                return Result(person.MapToCreatePersonResponse(personCreated));
-
-            return Result(new Person().MapToCreatePersonResponse(false));
+            return Result(person.MapToCreatePersonResponse(personCreated));
         }
 
         private async Task<bool> CreatePerson(Person person)
