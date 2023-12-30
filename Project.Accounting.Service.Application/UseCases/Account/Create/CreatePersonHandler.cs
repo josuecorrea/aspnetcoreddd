@@ -22,7 +22,7 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
         private readonly ICacheService _cacheService;
         private readonly IConfiguration _configuration;
 
-        public CreatePersonHandler(IPersonRepository personRepository, IMediator mediator, 
+        public CreatePersonHandler(IPersonRepository personRepository, IMediator mediator,
             ILogger<CreatePersonHandler> logger,
             ICacheService cacheService, IConfiguration configuration)
         {
@@ -35,22 +35,14 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
 
         public async Task<BaseResult<CreatePersonResponse>> Handle(CreatePersonRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var person = request.Adapt<Person>();
+            var person = request.Adapt<Person>();
 
-                var personCreated = await CreatePerson(person);
+            var personCreated = await CreatePerson(person);
 
+            if (personCreated)
                 return Result(person.MapToCreatePersonResponse(personCreated));
-            }
-            catch (Exception ex)
-            {
-                var error = "An error ocurred while create new person!";
-                AddError(error);
-                _logger.LogError(ex, error);
 
-                return Result(new Person().MapToCreatePersonResponse(false));
-            }
+            return Result(new Person().MapToCreatePersonResponse(false));
         }
 
         private async Task<bool> CreatePerson(Person person)
@@ -71,7 +63,9 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error ocurred while create new person!");
+                var error = "An error ocurred while create new person!";
+                AddError(error);
+                _logger.LogError(ex, error);
 
                 return false;
             }
