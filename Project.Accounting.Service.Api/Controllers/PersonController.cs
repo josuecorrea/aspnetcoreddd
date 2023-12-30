@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Request;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Response;
-using Project.Accounting.Service.Domain.Commom;
 
 namespace Project.Accounting.Service.Api.Controllers
 {
@@ -25,7 +24,7 @@ namespace Project.Accounting.Service.Api.Controllers
         {
             var result = await _mediator.Send(request);
 
-            return await DefaultResponse(result, 201);
+            return await DefaultResponse(result, StatusCodes.Status201Created);
         }
     }
 }

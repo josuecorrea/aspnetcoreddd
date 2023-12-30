@@ -9,15 +9,13 @@ namespace Project.Accounting.Service.Infra.Services
     {
         private readonly IConfiguration _configuration;
 
-        private const string VAULT_CACHE_CONNECTION = "RedisCacheConnection";
-
         private readonly IDatabase _db;
 
         public CacheService(IConfiguration configuration)
         {
             _configuration = configuration;
 
-            var cnn = ConnectionMultiplexer.Connect(_configuration[VAULT_CACHE_CONNECTION]);
+            var cnn = ConnectionMultiplexer.Connect("localhost:6379");
             _db = cnn.GetDatabase();
         }
 
@@ -34,6 +32,13 @@ namespace Project.Accounting.Service.Infra.Services
         public async Task SetValue(string key, string value, TimeSpan expireAt)
         {
             await _db.StringSetAsync(key, value, expireAt);
+        }
+
+        public async Task SetValue<T>(string key, T value, TimeSpan expireAt) where T : class
+        {
+            var json = JsonConvert.SerializeObject(value);
+
+            await _db.StringSetAsync(key, json, expireAt);
         }
 
         public async Task SetHashValue(string key, string hashEntryKey, string value, TimeSpan expireAt)

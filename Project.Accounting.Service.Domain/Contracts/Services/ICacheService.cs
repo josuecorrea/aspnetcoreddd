@@ -8,5 +8,6 @@
         Task<IEnumerable<KeyValuePair<string, string>>> GetHashValue(string key);
         Task DeleteHash(string key, string hashField);
         Task DeleteKey(string key);
+        Task SetValue<T>(string key, T value, TimeSpan expireAt) where T : class;
     }
 }
