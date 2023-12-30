@@ -8,6 +8,8 @@ using Project.Accounting.Service.Application.UseCases.Account.Create.Response;
 using Project.Accounting.Service.Domain.Commom;
 using Project.Accounting.Service.Domain.Contracts.Services;
 using Project.Accounting.Service.Domain.Entities.PersonAgg;
+using Project.Accounting.Service.Application.UseCases.Account.Create.Mapping;
+using System;
 
 namespace Project.Accounting.Service.Application.UseCases.Account.Create
 {
@@ -16,7 +18,7 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
         private readonly IPersonRepository _personRepository;
         private readonly IMediator _mediator;
         private readonly ILogger<CreatePersonHandler> _logger;
-        private readonly ICacheService _cacheService;        
+        private readonly ICacheService _cacheService;
 
         public CreatePersonHandler(IPersonRepository personRepository, IMediator mediator, ILogger<CreatePersonHandler> logger,
             ICacheService cacheService)
@@ -35,22 +37,14 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
 
                 var personCreated = await CreatePerson(person);
 
-                return new BaseResult<CreatePersonResponse>(new CreatePersonResponse
-                {
-                    Id = person.Id,
-                    Created = true
-                });
+                return new BaseResult<CreatePersonResponse>(person.MapToCreatePersonResponse(personCreated));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex,"An error ocurred while create new person!");
+                _logger.LogError(ex, "An error ocurred while create new person!");
 
-                return new BaseResult<CreatePersonResponse>(new CreatePersonResponse
-                {
-                    Id = Guid.Empty,
-                    Created = false
-                });
-            }           
+                return new BaseResult<CreatePersonResponse>(new Person().MapToCreatePersonResponse(false));
+            }
         }
 
         private async Task<bool> CreatePerson(Person person)
@@ -73,7 +67,7 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
             {
                 _logger.LogError(ex, "An error ocurred while create new person!");
 
-                return false;                
+                return false;
             }
         }
     }
