@@ -1,12 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Request;
+using Project.Accounting.Service.Application.UseCases.Account.Create.Response;
+using Project.Accounting.Service.Domain.Commom;
 
 namespace Project.Accounting.Service.Api.Controllers
 {
     [ApiController]
     [Route("api")]
-    public class PersonController : Controller
+    public class PersonController : DefaultController
     {
         private readonly IMediator _mediator;
 
@@ -17,16 +19,13 @@ namespace Project.Accounting.Service.Api.Controllers
 
         [HttpPost]
         [Route("v1/create")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CreatePersonResponse))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreatePersonRequest request)
         {
             var result = await _mediator.Send(request);
 
-            if (result.Error)
-            {
-                return BadRequest();
-            }
-
-            return StatusCode(201, result);
+            return await DefaultResponse(result, 201);
         }
     }
 }

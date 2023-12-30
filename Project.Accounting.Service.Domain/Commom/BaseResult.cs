@@ -2,7 +2,7 @@
 {
     public record BaseResult<T>
     {
-        public BaseResult(T result, bool error = false, string[] errorMessages = null!)
+        public BaseResult(T result, bool error = false, List<string> errorMessages = null!)
         {
             Error = error;
             ErrorMessages = errorMessages;
@@ -11,7 +11,7 @@
         }
 
         public bool Error { get; }
-        public string[] ErrorMessages { get; }
+        public List<string> ErrorMessages { get; }
         public T Result { get; }
     }
 }
