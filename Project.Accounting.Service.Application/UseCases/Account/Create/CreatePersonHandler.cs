@@ -1,16 +1,15 @@
 ﻿using Mapster;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PersonCreatedNotificationEvent;
 using PersonCreateFailNotificationEvent;
+using Project.Accounting.Service.Application.UseCases.Account.Create.Mapping;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Request;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Response;
 using Project.Accounting.Service.Domain.Commom;
 using Project.Accounting.Service.Domain.Contracts.Services;
 using Project.Accounting.Service.Domain.Entities.PersonAgg;
-using Project.Accounting.Service.Application.UseCases.Account.Create.Mapping;
-using System;
-using Microsoft.Extensions.Configuration;
 
 namespace Project.Accounting.Service.Application.UseCases.Account.Create
 {
@@ -49,10 +48,7 @@ namespace Project.Accounting.Service.Application.UseCases.Account.Create
                 var personCreated = await _personRepository.Insert(person);
 
                 if (personCreated)
-                {
-                    await _mediator.Publish(person.Adapt<PersonCreatedNotification>());
-                    await _cacheService.SetValue(person.Id.ToString(), person, CacheTimeDefinition.OneYear());
-                }
+                    await _mediator.Publish(new PersonCreatedNotification(person));
                 else
                     await _mediator.Publish(new PersonCreateFailNotification(person));
 
