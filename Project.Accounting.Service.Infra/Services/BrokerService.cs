@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Project.Accounting.Service.Domain.Contracts.Services;
 using System.Net.Mime;
@@ -8,15 +7,13 @@ namespace Project.Accounting.Service.Infra.Services
 {
     public class BrokerService : IBrokerService
     {
-        private readonly IConfiguration _configuration;
         private ILogger<BrokerService> _logger;
         private readonly IBus _bus;
         public readonly IPublishEndpoint _publishEndpoint;
 
-        public BrokerService(ILogger<BrokerService> logger, IConfiguration configuration, IBus bus, IPublishEndpoint publishEndpoint)
+        public BrokerService(ILogger<BrokerService> logger, IBus bus, IPublishEndpoint publishEndpoint)
         {
             _logger = logger;
-            _configuration = configuration;
             _bus = bus;
             _publishEndpoint = publishEndpoint;
         }

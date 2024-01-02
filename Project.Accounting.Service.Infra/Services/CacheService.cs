@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Project.Accounting.Service.Domain.Commom;
 using Project.Accounting.Service.Domain.Contracts.Services;
 using StackExchange.Redis;
 
@@ -7,15 +9,15 @@ namespace Project.Accounting.Service.Infra.Services
 {
     public class CacheService : ICacheService
     {
+        private readonly ConnectionsConfigurations _connectionsConfigurations;
         private readonly IConfiguration _configuration;
-
         private readonly IDatabase _db;
 
-        public CacheService(IConfiguration configuration)
+        public CacheService(IConfiguration configuration, IOptions<ConnectionsConfigurations> options)
         {
             _configuration = configuration;
-
-            var cnn = ConnectionMultiplexer.Connect(_configuration["ConnectionStrings:CacheConnection"]);
+            _connectionsConfigurations = options.Value;
+            var cnn = ConnectionMultiplexer.Connect(_connectionsConfigurations.CacheConnection);
             _db = cnn.GetDatabase();
         }
 

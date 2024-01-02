@@ -11,6 +11,7 @@ builder.Services.AddRepositoriesDependecyInjection();
 builder.Services.AddMediatrDependecyInjection();
 builder.Services.AddServicesDependecyInjection();
 builder.Services.AddBrokerConfiguration(builder.Configuration);
+builder.Services.AddSettingsConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
