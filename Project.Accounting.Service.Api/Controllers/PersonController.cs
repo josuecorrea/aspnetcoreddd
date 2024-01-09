@@ -1,10 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Request;
 using Project.Accounting.Service.Application.UseCases.Account.Create.Response;
 
 namespace Project.Accounting.Service.Api.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api")]
     public class PersonController : DefaultController
@@ -22,9 +24,11 @@ namespace Project.Accounting.Service.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Create([FromBody] CreatePersonRequest request)
         {
-            var result = await _mediator.Send(request);
+            //var result = await _mediator.Send(request);
 
-            return await DefaultResponse(result, StatusCodes.Status201Created);
+            //return await DefaultResponse(result, StatusCodes.Status201Created);
+
+            throw new TimeoutException();
         }
     }
 }
