@@ -18,7 +18,6 @@ builder.Services.AddBrokerConfiguration(builder.Configuration);
 builder.Services.AddSettingsConfiguration(builder.Configuration);
 builder.Services.AddAuthenticationConfig(builder.Configuration);
 
-
 var app = builder.Build();
 
 app.UseExceptionHandler(opt => { });

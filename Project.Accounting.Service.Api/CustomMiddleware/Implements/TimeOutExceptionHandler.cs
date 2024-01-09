@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Project.Accounting.Service.Domain.Commom;
 using System.Net;
 
 namespace Project.Accounting.Service.Api.CustomMiddleware.Implements
@@ -20,14 +22,17 @@ namespace Project.Accounting.Service.Api.CustomMiddleware.Implements
             {
                 httpContext.Response.StatusCode = (int)HttpStatusCode.RequestTimeout;
 
-                await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
+                var problemDetails = new ProblemDetails
                 {
                     Status = (int)HttpStatusCode.RequestTimeout,
                     Type = exception.GetType().Name,
                     Title = "A timeout occurred",
                     Detail = exception.Message,
                     Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
-                });
+                };
+
+                await httpContext.Response.WriteAsJsonAsync(new BaseResult<ProblemDetails>(problemDetails, ["A timeout occurred"]));
+
                 return true;
             }
             return false;

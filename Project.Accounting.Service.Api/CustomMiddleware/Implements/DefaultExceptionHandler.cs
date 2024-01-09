@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Project.Accounting.Service.Domain.Commom;
 using System.Net;
 
 namespace Project.Accounting.Service.Api.CustomMiddleware.Implements
@@ -16,14 +17,16 @@ namespace Project.Accounting.Service.Api.CustomMiddleware.Implements
         {
             _logger.LogError(exception, "An unexpected error occurred");
 
-            await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
+            var problemDetails = new ProblemDetails
             {
                 Status = (int)HttpStatusCode.InternalServerError,
                 Type = exception.GetType().Name,
                 Title = "An unexpected error occurred",
                 Detail = exception.Message,
                 Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
-            });
+            };
+
+            await httpContext.Response.WriteAsJsonAsync(new BaseResult<ProblemDetails>(problemDetails, ["An unexpected error occurred"]));
 
             return true;
         }
