@@ -1,3 +1,4 @@
+using FastEndpoints;
 using Project.Accounting.Service.Api.Config;
 using Project.Accounting.Service.Api.CustomMiddleware.Implements;
 
@@ -19,8 +20,6 @@ builder.Services.AddSettingsConfiguration(builder.Configuration);
 builder.Services.AddAuthenticationConfig(builder.Configuration);
 
 var app = builder.Build();
-
-app.UseExceptionHandler(opt => { });
 
 if (app.Environment.IsDevelopment())
 {
